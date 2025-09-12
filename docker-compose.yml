@@ -1,0 +1,45 @@
+services:
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: data0804base
+      POSTGRES_DB: trabalhomvc_db
+    ports:
+      # Expõe a porta do Postgres para que possamos acessá-la de fora (opcional)
+      - "5432:5432"
+    volumes:
+      # Garante que os dados do banco persistam mesmo se o contêiner for recriado
+      - pgdata:/var/lib/postgresql/data
+
+  # Serviço do Backend (NestJS)
+  backend:
+    build: ./backend
+    container_name: nestjs_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # A URL de conexão que o Prisma usará dentro do Docker.
+      # O host 'db' é o nome do serviço do PostgreSQL definido acima.
+      DATABASE_URL: "postgresql://postgres:data0804base@db:5432/trabalhomvc_db"
+    depends_on:
+      - db # Garante que o banco de dados inicie antes do backend
+
+  # Serviço do Frontend (React com Nginx)
+  frontend:
+    build: ./web
+    container_name: react_frontend
+    restart: always
+    ports:
+      # Mapeia a porta 80 do contêiner para a porta 8080 da nossa máquina
+      - "8080:80"
+    depends_on:
+      - backend # Garante que o backend inicie antes do frontend
+
+volumes:
+  # Define o volume nomeado para persistir os dados do PostgreSQL
+  pgdata:
