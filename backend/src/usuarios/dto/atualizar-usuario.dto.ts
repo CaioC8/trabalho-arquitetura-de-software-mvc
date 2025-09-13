@@ -1,7 +1,7 @@
 import { IsEmail, IsOptional, IsString } from "class-validator";
 
 export class AtualizarUsuarioDto {
-  @IsEmail()
+  @IsEmail({}, { message: "O e-mail fornecido é inválido." })
   @IsOptional()
   email?: string;
 
