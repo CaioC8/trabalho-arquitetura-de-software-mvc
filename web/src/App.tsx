@@ -1,5 +1,7 @@
+import "./index.css";
+
 function App() {
-  return <p>Teste</p>;
+  return <p>Teste mais</p>;
 }
 
 export default App;
