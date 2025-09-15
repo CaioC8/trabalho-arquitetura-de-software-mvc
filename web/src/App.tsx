@@ -1,5 +1,11 @@
 import { useState } from "react";
-import * as api from "../api/apiService";
+import {
+  getTodosUsuarios,
+  getUsuarioPorId,
+  criarUsuario,
+  atualizarUsuario,
+  deletarUsuario,
+} from "../api/apiService";
 import Formulario, {
   type CampoConfig,
   type BotaoConfig,
@@ -20,41 +26,6 @@ function App() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const executarAcao = async (acaoFn: () => Promise<any>) => {
-    setLoading(true);
-    setError(null);
-    setResultado(null);
-    try {
-      const response = await acaoFn();
-      setResultado(response.data);
-    } catch (err: any) {
-      const errorData = err.response?.data;
-      setError(errorData?.mensagem || err.message || "Ocorreu um erro.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const acoes = {
-    buscarTodos: () => executarAcao(api.getTodosUsuarios),
-    buscarPorId: () =>
-      executarAcao(() => api.getUsuarioPorId(Number(formData.id))),
-    adicionarUsuario: () =>
-      executarAcao(() =>
-        api.criarUsuario({ nome: formData.nome, email: formData.email })
-      ),
-    alterarUsuario: () =>
-      executarAcao(() =>
-        api.atualizarUsuario(Number(formData.id), {
-          nome: formData.nome,
-          email: formData.email,
-        })
-      ),
-    deletarUsuario: () =>
-      executarAcao(() => api.deletarUsuario(Number(formData.id))),
-  };
-
-  // Lógica para gerar a configuração do formulário com base na ação ativa
   const getFormConfig = (): {
     campos: CampoConfig[];
     botoes: BotaoConfig[];
@@ -142,6 +113,39 @@ function App() {
           ],
         };
     }
+  };
+
+  const executarAcao = async (acaoFn: () => Promise<any>) => {
+    setLoading(true);
+    setError(null);
+    setResultado(null);
+    try {
+      const response = await acaoFn();
+      setResultado(response.data);
+    } catch (err: any) {
+      const errorData = err.response?.data;
+      setError(errorData?.mensagem || err.message || "Ocorreu um erro.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const acoes = {
+    buscarTodos: () => executarAcao(getTodosUsuarios),
+    buscarPorId: () => executarAcao(() => getUsuarioPorId(Number(formData.id))),
+    adicionarUsuario: () =>
+      executarAcao(() =>
+        criarUsuario({ nome: formData.nome, email: formData.email })
+      ),
+    alterarUsuario: () =>
+      executarAcao(() =>
+        atualizarUsuario(Number(formData.id), {
+          nome: formData.nome,
+          email: formData.email,
+        })
+      ),
+    deletarUsuario: () =>
+      executarAcao(() => deletarUsuario(Number(formData.id))),
   };
 
   const formConfig = getFormConfig();

@@ -39,18 +39,6 @@ function criarResponse<T>(
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
-  @Post()
-  async create(
-    @Body() criarUsuarioDto: CriarUsuarioDto
-  ): Promise<RespostaPadrao<Usuario>> {
-    const usuario = await this.usuariosService.create(criarUsuarioDto);
-    return criarResponse(
-      "Usuário criado com sucesso.",
-      usuario,
-      HttpStatus.CREATED
-    );
-  }
-
   @Get()
   async findAll(): Promise<RespostaPadrao<Usuario[]>> {
     const usuarios = await this.usuariosService.findAll();
@@ -67,6 +55,18 @@ export class UsuariosController {
   ): Promise<RespostaPadrao<Usuario>> {
     const usuario = await this.usuariosService.findOne(id);
     return criarResponse("Usuário encontrado.", usuario, HttpStatus.OK);
+  }
+
+  @Post()
+  async create(
+    @Body() criarUsuarioDto: CriarUsuarioDto
+  ): Promise<RespostaPadrao<Usuario>> {
+    const usuario = await this.usuariosService.create(criarUsuarioDto);
+    return criarResponse(
+      "Usuário criado com sucesso.",
+      usuario,
+      HttpStatus.CREATED
+    );
   }
 
   @Put(":id")
