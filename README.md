@@ -5,3 +5,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 - iniciar containeres no modo de produção:
 
 docker-compose up --build
+
+- criar banco:
+
+docker-compose exec backend npx prisma migrate dev --name init
