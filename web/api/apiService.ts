@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Usuario } from "../utils/types";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://literate-space-cod-976vx7rqv556hrp4-3000.app.github.dev/",
   headers: {
     "Content-Type": "application/json",
   },
